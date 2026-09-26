@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.BinDecHex.omamath",
+  "name": "OmaMath",
+  "version": "1.0.0",
+  "author": "Nicholas Pearce",
+  "license": "MIT",
+  "description": "A math and radix converter (Dec/Bin/Hex) for Omarchy.",
+  "kinds": [ "bar-widget" ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "OmaMath Converter",
+    "category": "Utilities",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
