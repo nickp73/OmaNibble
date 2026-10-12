@@ -31,7 +31,7 @@ Ui.BarWidget {
         }
     }
 
-    // This local component stays mounted, preserving inputs between opens.
+
     // Property bindings keep its host and anchor up to date automatically.
     Panel {
         id: calculator

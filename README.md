@@ -9,8 +9,9 @@ and follows the active theme. It does not work with the older Waybar setup.
 Click **OmaMath** in the bar (`=` on a vertical bar). Type an expression or edit
 any of the three integer fields. Results update as you type. Use Tab / Shift+Tab
 to move between fields, Ctrl+A then Ctrl+C to copy a value, and Escape or an
-outside click to close. **Clear** resets all inputs. Inputs survive closing and
-reopening, but are not saved across shell restarts or plugin reloads.
+outside click to close. **Clear** resets all inputs but keeps the selected mode
+and width. Inputs and mode selections survive closing and reopening, but are
+not saved across shell restarts or plugin reloads.
 
 | Input | Result |
 | --- | --- |
@@ -20,6 +21,8 @@ reopening, but are not saved across shell restarts or plugin reloads.
 | `2^8` or `2**8` | `256` |
 | Binary field: `0b1010` | Decimal `10`, hexadecimal `A` |
 | Hexadecimal field: `-FF` | Decimal `-255`, binary `-11111111` |
+| Hexadecimal field: `FFFFFFFFFFFFFFFF` | Decimal `18446744073709551615`, binary 64 ones |
+| Decimal field: `-9223372036854775808` | Hexadecimal `-8000000000000000` |
 
 Arithmetic supports `+`, `-`, `*`, `/`, `%` (remainder), `^` / `**` (power),
 parentheses, decimal fractions and scientific notation such as `1e3`.
@@ -30,16 +33,54 @@ operators; `^` means exponentiation, not JavaScript XOR.
 
 Conversion fields accept whole integers only. Binary and hex prefixes (`0b`,
 `0x`) are optional in their respective fields and required in expressions.
-Negative values use a minus sign, not fixed-width two's complement.
+In the default **Minus sign** mode, negative values use a minus sign. This mode
+supports the combined signed and unsigned 64-bit range:
+−9,223,372,036,854,775,808 through 18,446,744,073,709,551,615. Positive inputs
+are unsigned magnitudes: `FFFFFFFFFFFFFFFF` is the unsigned maximum, not `-1`.
+Out-of-range inputs produce an error rather than wrapping or rounding.
 Invalid or unfinished input shows an explanation and clears old results.
 The active conversion field keeps its original text and cursor position.
 Editing a conversion field clears the previous expression.
 
-Arithmetic uses JavaScript floating point, so `0.1 + 0.2` displays
+Expression arithmetic uses JavaScript floating point, so `0.1 + 0.2` displays
 `0.30000000000000004`. Literals and intermediate results are limited in magnitude
-to 9,007,199,254,740,991 (JavaScript's maximum safe integer). Integer conversions
-within that range are exact; decimal arithmetic is approximate. Expressions
-are limited to 512 characters and conversion fields to 128.
+to 9,007,199,254,740,991 (JavaScript's maximum safe integer). Enter larger integers
+directly in the conversion fields, which use exact digit-string arithmetic and
+do not pass through floating point. Decimal expression arithmetic remains
+approximate; exact decimal calculations are not implemented. Expressions are
+limited to 512 characters and conversion fields to 128.
+
+### Optional fixed-width modes
+
+Choose **Unsigned** or **Two’s complement**, then **8**, **16**, **32** or **64
+bits**. The width starts at 8 bits. Generated binary and hexadecimal values are
+padded to that width. The field you are editing keeps its original text and
+cursor, including any prefix or omitted leading zeros.
+
+| Mode and width | Input field | Input | Decimal | Binary | Hex |
+| --- | --- | --- | --- | --- | --- |
+| Two’s complement, 8 bits | Decimal | `-5` | `-5` | `11111011` | `FB` |
+| Two’s complement, 8 bits | Hex | `FF` | `-1` | `11111111` | `FF` |
+| Unsigned, 8 bits | Hex | `FF` | `255` | `11111111` | `FF` |
+| Two’s complement, 16 bits | Hex | `FF` | `255` | `0000000011111111` | `FF` (edited input) |
+
+Unsigned mode accepts decimal values from 0 through 2^width − 1. Two’s
+complement accepts −2^(width−1) through 2^(width−1) − 1 (−128 through 127 at
+8 bits). Enter negative numbers in **Decimal**; binary and hex fields accept
+bit patterns without a minus sign in these modes. A pattern's highest bit
+determines its sign in two’s complement. Short patterns are zero-extended to
+the selected width; extra leading zeros are accepted within the input length
+limit. Overflow produces an error rather than truncating or wrapping.
+
+Changing mode or width reinterprets the field you last edited. For example,
+hex `FF` changes from −1 to 255 when switching from 8-bit to 16-bit two’s
+complement. Decimal `-1` stays −1 and its generated hex changes from `FF` to
+`FFFF`. Switch back to **Minus sign** for the original representation.
+
+These modes affect base conversion only. Expressions keep their ordinary
+arithmetic meaning: `0xFF` still means 255, and `127 + 1` still gives 128. If
+the result cannot fit the selected width, the result remains visible while
+the conversion fields clear and a range explanation appears.
 
 ## How the files fit together
 
@@ -102,6 +143,14 @@ local references used by the component itself.
 `convert` and `isSafeInteger`. The parser only recognizes numbers and the
 supported operators; it never evaluates input as JavaScript code.
 
+`parseInteger` returns a canonical decimal **string**, even for small integers.
+`convert` accepts that string or a safe integer `Number` from an expression.
+Both accept optional `mode` (`"plain"`, `"unsigned"`, `"twos"`) and `width`
+arguments after their existing arguments. Omit the mode for the original
+minus-sign behavior. Fixed-width negation flips individual bits and adds one.
+Base conversion uses long division on digit arrays, keeping every intermediate
+small and exact. It needs no external library or `BigInt` support from QML.
+
 The parser is recursive descent: `sum` handles addition/subtraction, `product`
 handles multiplication/division/remainder, `unary` handles leading signs,
 `power` handles exponentiation and `primary` handles numbers/parentheses.
@@ -148,6 +197,12 @@ Run the arithmetic and conversion tests with Node.js (no packages needed):
 node tests/calculator.test.cjs
 ```
 
+These tests compare 64-bit conversions against Node's `BigInt`, including range
+boundaries, powers of two and deterministic samples. `BigInt` is only a test
+oracle, not a dependency of the running plugin.
+They also cover all 256 eight-bit patterns in both fixed-width modes and
+overflow, padding and signed boundaries at every supported width.
+
 In your active Wayland desktop session, run the Quickshell integration check:
 
 ```bash
@@ -156,8 +211,9 @@ In your active Wayland desktop session, run the Quickshell integration check:
 
 It creates a temporary configuration with links to Omarchy's `Ui` and `Commons`,
 loads the real widget and panel, then exercises the actual text-edit handlers.
-It checks conversion updates, cursor preservation, error clearing and fractional
-results. It opens no window and does not change your installed shell. It prints
+It checks conversion updates, mode and width buttons, cursor preservation,
+error clearing and fractional results. It opens no window and does not change
+your installed shell. It prints
 `OMAMATH_SMOKE_OK` on success. This test does not replace checking visible layout,
 mouse clicks and keyboard focus in your desktop.
 

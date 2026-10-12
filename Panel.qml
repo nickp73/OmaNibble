@@ -14,6 +14,19 @@ Ui.Panel {
     property var hostWidget: null
     property string errorMessage: ""
     property string conversionNote: ""
+    property string conversionMode: "plain"
+    property int bitWidth: 8
+    property Item sourceField: null
+    property int sourceBase: 10
+
+    onConversionModeChanged: refreshConversion()
+    onBitWidthChanged: refreshConversion()
+
+    function refreshConversion() {
+        if (sourceField === null) return
+        if (sourceField === mathInput) calculate()
+        else editBase(sourceField, sourceBase)
+    }
 
     function clearBases(exceptField) {
         if (exceptField !== decField) decField.text = ""
@@ -22,7 +35,7 @@ Ui.Panel {
     }
 
     function showBases(value, exceptField) {
-        var bases = Calculator.convert(value)
+        const bases = Calculator.convert(value, conversionMode, bitWidth)
         // Don't rewrite the field being edited: preserve its cursor and prefix.
         if (exceptField !== decField) decField.text = bases.decimal
         if (exceptField !== binField) binField.text = bases.binary
@@ -30,6 +43,7 @@ Ui.Panel {
     }
 
     function calculate() {
+        sourceField = mathInput
         errorMessage = ""
         conversionNote = ""
         resultField.text = ""
@@ -38,14 +52,23 @@ Ui.Panel {
         try {
             var value = Calculator.evaluate(mathInput.text)
             resultField.text = String(value)
-            if (Calculator.isSafeInteger(value)) showBases(value, null)
-            else conversionNote = "Fractional result — base conversion requires an integer."
+            if (Calculator.isSafeInteger(value)) {
+                try {
+                    showBases(value, null)
+                } catch (conversionError) {
+                    // The arithmetic result remains valid even if it doesn't
+                    // fit the selected conversion width.
+                    conversionNote = conversionError.message
+                }
+            } else conversionNote = "Fractional result — base conversion requires an integer."
         } catch (error) {
             errorMessage = error.message
         }
     }
 
     function editBase(field, base) {
+        sourceField = field
+        sourceBase = base
         errorMessage = ""
         conversionNote = ""
         mathInput.text = ""
@@ -53,15 +76,16 @@ Ui.Panel {
         clearBases(field)
         if (field.text.trim() === "") return
         try {
-            var value = Calculator.parseInteger(field.text, base)
-            resultField.text = String(value)
+            const value = Calculator.parseInteger(field.text, base, conversionMode, bitWidth)
             showBases(value, field)
+            resultField.text = value
         } catch (error) {
             errorMessage = error.message
         }
     }
 
     function clear() {
+        sourceField = null
         mathInput.text = ""
         resultField.text = ""
         clearBases(null)
@@ -120,7 +144,7 @@ Ui.Panel {
 
                     Text {
                         width: parent.width
-                        text: "Calculate, or edit any base to convert."
+                        text: "Calculate, or convert 64-bit integers between bases."
                         color: Color.muted
                         font.family: Style.font.family
                         font.pixelSize: Style.font.bodySmall
@@ -162,6 +186,60 @@ Ui.Panel {
                         selectByMouse: true
                         placeholderText: "Select a value and press Ctrl+C to copy"
                         onActiveFocusChanged: if (activeFocus) scroll.reveal(resultField)
+                    }
+
+                    Flow {
+                        width: parent.width
+                        spacing: Style.space(6)
+                        Repeater {
+                            model: [
+                                { key: "plain", label: "Minus sign" },
+                                { key: "unsigned", label: "Unsigned" },
+                                { key: "twos", label: "Two’s complement" }
+                            ]
+                            delegate: Ui.Button {
+                                required property var modelData
+                                objectName: "mode-" + modelData.key
+                                text: modelData.label
+                                selected: root.conversionMode === modelData.key
+                                focusable: true
+                                bordered: true
+                                onClicked: root.conversionMode = modelData.key
+                                onActiveFocusChanged: if (activeFocus) scroll.reveal(this)
+                            }
+                        }
+                    }
+
+                    Flow {
+                        width: parent.width
+                        visible: root.conversionMode !== "plain"
+                        spacing: Style.space(6)
+                        Repeater {
+                            model: [8, 16, 32, 64]
+                            delegate: Ui.Button {
+                                required property int modelData
+                                objectName: "width-" + modelData
+                                text: modelData + " bits"
+                                selected: root.bitWidth === modelData
+                                focusable: true
+                                bordered: true
+                                onClicked: root.bitWidth = modelData
+                                onActiveFocusChanged: if (activeFocus) scroll.reveal(this)
+                            }
+                        }
+                    }
+
+                    Text {
+                        width: parent.width
+                        text: root.conversionMode === "plain"
+                            ? "Negative binary and hex values use a minus sign."
+                            : root.conversionMode === "twos"
+                                ? root.bitWidth + "-bit signed: a leading 1 bit means negative. Enter negative values in Decimal."
+                                : root.bitWidth + "-bit unsigned: all values are zero or positive."
+                        color: Color.muted
+                        font.family: Style.font.family
+                        font.pixelSize: Style.font.bodySmall
+                        wrapMode: Text.WordWrap
                     }
 
                     Text {
