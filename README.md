@@ -1,4 +1,4 @@
-# OmaMath — your first Omarchy plugin
+# OmaMath
 
 A bar calculator and decimal / binary / hexadecimal converter for the
 Quickshell-based Omarchy shell. It uses Omarchy's current shared UI components
