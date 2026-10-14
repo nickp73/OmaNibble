@@ -1,5 +1,9 @@
 # OmaNibble
 
+![OmaNibble changes with Omarchy themes](Images/dark_theme.png)
+
+![OmaNibble light theme](Images/light_theme.png)
+
 A bar calculator and decimal / binary / hexadecimal converter for the
 Quickshell-based Omarchy shell. It uses Omarchy's current shared UI components
 and follows the active theme. It does not work with the older Waybar setup.
