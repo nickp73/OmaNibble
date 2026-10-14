@@ -167,9 +167,9 @@ ShellRoot {
             check(panel.sourceField === null && panel.conversionMode === "twos", "Clear retains selected mode and resets source")
             plain.clicked()
             check(fields.result.text === "" && panel.errorMessage === "", "Mode switch after clear keeps inputs empty")
-            console.log("OMAMATH_SMOKE_OK")
+            console.log("OMANIBBLE_SMOKE_OK")
         } catch (error) {
-            console.error("OMAMATH_SMOKE_FAILED: " + error.message)
+            console.error("OMANIBBLE_SMOKE_FAILED: " + error.message)
         }
         Qt.quit()
     })

@@ -5,7 +5,7 @@ set -euo pipefail
 # Stage links in a temporary root, leaving the installed shell untouched.
 project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 shell_dir="${OMARCHY_PATH:-/usr/share/omarchy}/shell"
-check_dir=$(mktemp -d /tmp/omamath-smoke.XXXXXX)
+check_dir=$(mktemp -d /tmp/omanibble-smoke.XXXXXX)
 trap 'rm -rf -- "$check_dir"' EXIT
 ln -s "$shell_dir/Ui" "$check_dir/Ui"
 ln -s "$shell_dir/Commons" "$check_dir/Commons"
@@ -16,7 +16,7 @@ if ! timeout 15s quickshell -p "$check_dir" --no-color > "$check_dir/output.log"
     exit 1
 fi
 cat "$check_dir/output.log"
-grep -q 'OMAMATH_SMOKE_OK' "$check_dir/output.log"
-if grep -Eq 'OMAMATH_SMOKE_FAILED|ERROR|ReferenceError|TypeError|Binding loop' "$check_dir/output.log"; then
+grep -q 'OMANIBBLE_SMOKE_OK' "$check_dir/output.log"
+if grep -Eq 'OMANIBBLE_SMOKE_FAILED|ERROR|ReferenceError|TypeError|Binding loop' "$check_dir/output.log"; then
     exit 1
 fi
