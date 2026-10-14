@@ -1,4 +1,4 @@
-# OmaMath
+# OmaNibble
 
 A bar calculator and decimal / binary / hexadecimal converter for the
 Quickshell-based Omarchy shell. It uses Omarchy's current shared UI components
@@ -6,7 +6,7 @@ and follows the active theme. It does not work with the older Waybar setup.
 
 ## Using it
 
-Click **OmaMath** in the bar (`=` on a vertical bar). Type an expression or edit
+Click **OmaNibble** in the bar (`=` on a vertical bar). Type an expression or edit
 any of the three integer fields. Results update as you type. Use Tab / Shift+Tab
 to move between fields, Ctrl+A then Ctrl+C to copy a value, and Escape or an
 outside click to close. **Clear** resets all inputs but keeps the selected mode
@@ -162,7 +162,7 @@ Run from the project directory. Only the five runtime/documentation files are
 copied; your IDE configuration and tests stay in the project.
 
 ```bash
-plugin_dir="$HOME/.config/omarchy/plugins/io.github.BinDecHex.omamath"
+plugin_dir="$HOME/.config/omarchy/plugins/io.github.nickp73.omanibble"
 mkdir -p "$plugin_dir"
 cp manifest.json Calculator.js Panel.qml BarWidget.qml README.md "$plugin_dir/"
 omarchy-shell shell rescanPlugins
@@ -171,7 +171,7 @@ omarchy-shell shell rescanPlugins
 For a **first installation**, also run:
 
 ```bash
-omarchy plugin enable io.github.BinDecHex.omamath
+omarchy plugin enable io.github.nickp73.omanibble
 ```
 
 Your current installation is already enabled. Saving files in the installed
@@ -186,7 +186,7 @@ original broken widget on this machine; it briefly restarts the desktop shell.
 To open the panel from a terminal:
 
 ```bash
-omarchy-shell shell summon io.github.BinDecHex.omamath
+omarchy-shell shell summon io.github.nickp73.omanibble
 ```
 
 ## Check changes
@@ -214,13 +214,13 @@ loads the real widget and panel, then exercises the actual text-edit handlers.
 It checks conversion updates, mode and width buttons, cursor preservation,
 error clearing and fractional results. It opens no window and does not change
 your installed shell. It prints
-`OMAMATH_SMOKE_OK` on success. This test does not replace checking visible layout,
+`OMANIBBLE_SMOKE_OK` on success. This test does not replace checking visible layout,
 mouse clicks and keyboard focus in your desktop.
 
 For loading errors, inspect recent shell logs:
 
 ```bash
-journalctl --user -b --no-pager -n 20 -g 'omamath|Plugin widget'
+journalctl --user -b --no-pager -n 20 -g 'omanibble|Plugin widget'
 ```
 
 A useful learning sequence is to change the bar label, add a small panel control,

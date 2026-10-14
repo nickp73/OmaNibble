@@ -5,7 +5,7 @@ import qs.Ui as Ui
 // avoids confusing the framework component with this file's own name.
 Ui.BarWidget {
     id: root
-    moduleName: "io.github.BinDecHex.omamath"
+    moduleName: "io.github.nickp73.omanibble"
 
     implicitWidth: button.implicitWidth
     implicitHeight: button.implicitHeight
@@ -24,7 +24,7 @@ Ui.BarWidget {
         id: button
         anchors.fill: parent
         bar: root.bar
-        text: root.vertical ? "=" : "OmaMath"
+        text: root.vertical ? "=" : "OmaNibble"
         tooltipText: "Calculator and decimal / binary / hex converter"
         onPressed: function(mouseButton) {
             if (mouseButton === Qt.LeftButton) root.togglePanel()

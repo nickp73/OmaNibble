@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/BinDecHex.iml" filepath="$PROJECT_DIR$/.idea/BinDecHex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OmaNibble.iml" filepath="$PROJECT_DIR$/.idea/OmaNibble.iml" />
     </modules>
   </component>
 </project>

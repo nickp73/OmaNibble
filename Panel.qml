@@ -7,7 +7,7 @@ import "Calculator.js" as Calculator
 // Ui.KeyboardPanel below owns the actual window, focus and outside clicks.
 Ui.Panel {
     id: root
-    moduleName: "io.github.BinDecHex.omamath"
+    moduleName: "io.github.nickp73.omanibble"
     manageIpc: false
 
     property Item anchorItem: null
@@ -135,7 +135,7 @@ Ui.Panel {
                     spacing: Style.space(8)
 
                     Text {
-                        text: "OmaMath"
+                        text: "OmaNibble"
                         color: Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body * 1.3
