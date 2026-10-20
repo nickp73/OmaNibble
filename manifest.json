@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.nickp73.omanibble",
   "name": "OmaNibble",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Nicholas Pearce",
   "license": "MIT",
   "description": "A math and radix converter (Dec/Bin/Hex) for Omarchy.",
