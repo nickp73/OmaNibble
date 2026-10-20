@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Commons
+import qs.Commons as OmarchyCommons
 import qs.Ui as Ui
 import "Calculator.js" as Calculator
 
@@ -136,7 +137,7 @@ Ui.Panel {
 
                     Text {
                         text: "OmaNibble"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body * 1.3
                         font.bold: true
@@ -145,7 +146,7 @@ Ui.Panel {
                     Text {
                         width: parent.width
                         text: "Calculate, or convert 64-bit integers between bases."
-                        color: Color.muted
+                        color: OmarchyCommons.Color.muted
                         font.family: Style.font.family
                         font.pixelSize: Style.font.bodySmall
                         wrapMode: Text.WordWrap
@@ -153,7 +154,7 @@ Ui.Panel {
 
                     Text {
                         text: "Expression"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body
                     }
@@ -173,7 +174,7 @@ Ui.Panel {
 
                     Text {
                         text: "Result"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body
                     }
@@ -236,7 +237,7 @@ Ui.Panel {
                             : root.conversionMode === "twos"
                                 ? root.bitWidth + "-bit signed: a leading 1 bit means negative. Enter negative values in Decimal."
                                 : root.bitWidth + "-bit unsigned: all values are zero or positive."
-                        color: Color.muted
+                        color: OmarchyCommons.Color.muted
                         font.family: Style.font.family
                         font.pixelSize: Style.font.bodySmall
                         wrapMode: Text.WordWrap
@@ -244,7 +245,7 @@ Ui.Panel {
 
                     Text {
                         text: "Decimal · base 10"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body
                     }
@@ -262,7 +263,7 @@ Ui.Panel {
 
                     Text {
                         text: "Binary · base 2"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body
                     }
@@ -280,7 +281,7 @@ Ui.Panel {
 
                     Text {
                         text: "Hexadecimal · base 16"
-                        color: Color.foreground
+                        color: OmarchyCommons.Color.foreground
                         font.family: Style.font.family
                         font.pixelSize: Style.font.body
                     }
@@ -300,7 +301,7 @@ Ui.Panel {
                         width: parent.width
                         visible: text !== ""
                         text: root.errorMessage || root.conversionNote
-                        color: root.errorMessage ? Color.urgent : Color.muted
+                        color: root.errorMessage ? OmarchyCommons.Color.urgent : OmarchyCommons.Color.muted
                         font.family: Style.font.family
                         font.pixelSize: Style.font.bodySmall
                         wrapMode: Text.WordWrap
@@ -310,7 +311,7 @@ Ui.Panel {
                     Text {
                         width: parent.width
                         text: "+  −  *  /  %  ^  ( )   ·   Tab: next field   ·   Esc: close"
-                        color: Color.muted
+                        color: OmarchyCommons.Color.muted
                         font.family: Style.font.family
                         font.pixelSize: Style.font.bodySmall
                         wrapMode: Text.WordWrap

@@ -1,9 +1,5 @@
 # OmaNibble
 
-![OmaNibble changes with Omarchy themes](Images/dark_theme.png)
-
-![OmaNibble light theme](Images/light_theme.png)
-
 A bar calculator and decimal / binary / hexadecimal converter for the
 Quickshell-based Omarchy shell. It uses Omarchy's current shared UI components
 and follows the active theme. It does not work with the older Waybar setup.
@@ -230,15 +226,3 @@ journalctl --user -b --no-pager -n 20 -g 'omanibble|Plugin widget'
 A useful learning sequence is to change the bar label, add a small panel control,
 then add an operation in `Calculator.js` with a test. For your next plugin, reuse
 the widget/panel structure and give it a new manifest ID and matching module names.
-
-
-## Uninstalling
-
-To remove OmaNibble from your system, run the following commands in your terminal:
-
-```bash
-omarchy plugin disable io.github.nickp73.omanibble
-rm -rf "$HOME/.config/omarchy/plugins/io.github.nickp73.omanibble"
-omarchy-shell shell rescanPlugins
-omarchy restart shell
-```

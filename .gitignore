@@ -1,56 +1,68 @@
-### Qt template
-# C++ objects and libs
-*.slo
-*.lo
-*.o
-*.a
-*.la
-*.lai
-*.so
-*.so.*
-*.dll
-*.dylib
+### Python template
+# ==========================================
+# 1. JetBrains IDEs (PyCharm, CLion, etc.)
+# ==========================================
+.idea/
+*.iws
+*.iml
+*.ipr
+cmake-build-*/
+out/
 
-# Qt-es
-object_script.*.Release
-object_script.*.Debug
-*_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
+# ==========================================
+# 2. Python Bytecode & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging & Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+*.whl
+
+# Testing, Linting & Type Checking Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# 3. QML, Qt & Quickshell Artifacts
+# ==========================================
+# Compiled QML cache files
+*.qmlc
+*.jsc
+*.qrc.cpp
+
+# Qt Creator / Qt Design Studio user files
 *.pro.user
 *.pro.user.*
 *.qbs.user
 *.qbs.user.*
-*.moc
-moc_*.cpp
-moc_*.h
-qrc_*.cpp
-ui_*.h
-*.qmlc
-*.jsc
-Makefile*
-*build-*
-*.qm
-*.prl
+*.CMakeLists.txt.user
+.qmlls.ini
 
-# Qt unit tests
-target_wrapper.*
+# ==========================================
+# 4. Environment Secrets & OS Noise
+# ==========================================
+.env
+.env.local
+*.log
 
-# QtCreator
-*.autosave
-
-# QtCreator Qml
-*.qmlproject.user
-*.qmlproject.user.*
-
-# QtCreator CMake
-CMakeLists.txt.user*
-
-# QtCreator 4.8< compilation database
-compile_commands.json
-
-# QtCreator local machine specific files for imported projects
-*creator.user*
-
-*_qmlcache.qrc
-
+# Linux / Editor temporary files
+*~
+.directory
+.Trash-*
+*.swp
+*.swo
